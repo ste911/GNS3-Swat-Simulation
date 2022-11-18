@@ -2,11 +2,6 @@
 swat-s1 plc3.py
 """
 
-
-#from utils import PLC1_DATA, STATE, PLC1_PROTOCOL
-#from utils import PLC_PERIOD_SEC, PLC_SAMPLES
-#from utils import IP, LIT_101_M, LIT_301_M, FIT_201_THRESH,LS_201_M,LS_202_M,LS_203_M
-
 import time
 import logging
 import cpppo
@@ -24,8 +19,6 @@ PLC3_ADDR = '192.168.1.30:44818'
 PLC4_ADDR = '192.168.1.40:44818'
 
 PLC3_TAGS = (
-    ('LIT301', 3, 'REAL'),
-    ('FIT301', 3, 'REAL'),
     ('P301', 3, 'INT'),
     ('MV302', 3, 'INT'),
 
@@ -69,6 +62,8 @@ class SwatPLC3():
     def __init__(self):
 
         try:
+            log = open("logs/plc3log.log","w")
+            log.close()
             self.server = self.start_server()
             #self.server.wait()
             time.sleep(10)
@@ -235,7 +230,7 @@ class SwatPLC3():
 
     def pre_loop(self, sleep=0.2):
        # print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        #logging.basicConfig(filename='logs/plc1log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='logs/plc3log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):
@@ -253,39 +248,33 @@ class SwatPLC3():
             #logging.debug('plc 3 count : %d', count)
             lit301 = float(self.get(LIT301_3))
             self.send(LIT301_3, lit301, PLC3_ADDR)
-            #logging.debug("PLC3 - get lit301: %f", lit301)
+            logging.debug("PLC3 - get lit301: %f", lit301)
 
             lit401 = float(self.receive(LIT401_4, PLC4_ADDR))
-            #self.send(LIT401_3, lit401, PLC3_ADDR)
-            #logging.debug("PLC3 - receive lit401: %f",lit401)
+            logging.debug("PLC3 - receive lit401: %f",lit401)
 
-
+            
             if lit301 >= LIT_301_M['L'] and lit401 <= LIT_401_M['H']:
                  # OPEN MV201
                  self.set(P301, 1)
                  self.send(P301, 1, PLC3_ADDR)
                  self.set(MV302, 1)
                  self.send(MV302, 1, PLC3_ADDR)
-                 #logging.info("PLC3 - lit301 over LIT_301_M['H']  and LIT401 over H-> open p301 and mv302")
+                 logging.info("PLC3 - lit301 over LIT_301_M['H']  and lit401 over LIT401_M['H']-> open p301 and mv302")
+
             else:
                  # CLOSE MV201
                  self.set(P301, 0)
                  self.send(P301, 0, PLC3_ADDR)
                  self.set(MV302, 0)
                  self.send(MV302, 0, PLC3_ADDR)
-                 #logging.info("PLC3 - LIT301 under LIT301_L or LIT401 over LIT401_H close p301 and mv302")            
+                 logging.info("PLC3 - lit301 under LIT301_M['L'] or LIT401 over LIT401_M['H'] close p301 and mv302")            
             time.sleep(PLC_PERIOD_SEC)
             count += 1
 
-       # logging.debug('Swat PLC3 shutdown')
+        logging.debug('Swat PLC3 shutdown')
 
 
 if __name__ == "__main__":
 
-    # notice that memory init is different form disk init
     plc3 = SwatPLC3()
-        #name='plc1',
-        #state=STATE,
-        #protocol=PLC1_PROTOCOL,
-        #memory=PLC1_DATA,
-        #disk=PLC1_DATA)

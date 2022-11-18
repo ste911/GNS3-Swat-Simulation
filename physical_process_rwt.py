@@ -1,16 +1,9 @@
-#from utils import PUMP_FLOWRATE_IN, PUMP_FLOWRATE_OUT
-#from utils import TANK_HEIGHT, TANK_SECTION, TANK_DIAMETER
-#from utils import LIT_101_M, RWT_INIT_LEVEL
-#from utils import STATE, PP_PERIOD_SEC, PP_PERIOD_HOURS, PP_SAMPLES
-
-
 import sys
 import time
 import threading
 import logging
 import sqlite3
 
-# SPHINX_SWAT_TUTORIAL TAGS(
 MV101 = ('MV101', 1)
 MV201 = ('MV201', 2)
 
@@ -18,10 +11,6 @@ P101 = ('P101', 1)
 
 
 LIT101 = ('LIT101', 1)
-
-FIT101 = ('FIT101', 1)
-FIT201 = ('FIT201', 2)
-# SPHINX_SWAT_TUTORIAL TAGS)
 
 # RWT TANK
 TANK_HEIGHT = 1.600           # m
@@ -46,23 +35,18 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class RawWaterTank():
 
     def __init__(
-            self, name,
-            section, level):
+            self, section, level):
         """
-        :param str name: device name
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
 
         self.section = section
         self.level = level
-        self.name = name
         self.pre_loop()
         self.main_loop()
 
-   # def _start(self):
-    #    self.pre_loop()
-     #   self.main_loop()
+
     def get(self, what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'
         with sqlite3.connect("swat_s1_db.sqlite") as conn:
@@ -88,16 +72,9 @@ class RawWaterTank():
 
     def pre_loop(self):
 
-        # SPHINX_SWAT_TUTORIAL STATE INIT(
         self.set(MV101, 1)
         self.set(P101, 1)
         self.level = self.set(LIT101, 0.300)
-        # SPHINX_SWAT_TUTORIAL STATE INIT)
-
-        # test underflow
-         #self.set(MV101, 0)
-         #self.set(P101, 1)
-         #self.level = self.set(LIT101, 0.500)
 
     def main_loop(self):
 
@@ -111,23 +88,16 @@ class RawWaterTank():
             mv101 = self.get(MV101)
             logging.debug('RawWaterTank count %d', count)
             if int(mv101) == 1:
-                self.set(FIT101, PUMP_FLOWRATE_IN)
                 inflow = PUMP_FLOWRATE_IN * PP_PERIOD_HOURS
                 water_volume += inflow
-            
-            else:
-                self.set(FIT101, 0.00)
 
             # outflows volumes
             p101 = self.get(P101)
             mv201 = self.get(MV201)
 
             if int(p101) == 1 and int(mv201) == 1:
-                self.set(FIT201, PUMP_FLOWRATE_OUT)
                 outflow = PUMP_FLOWRATE_OUT * PP_PERIOD_HOURS
                 water_volume -= outflow
-            else:
-                self.set(FIT201, 0.00)
 
             # compute new water_level
             new_level = water_volume / self.section

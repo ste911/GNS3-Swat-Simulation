@@ -2,11 +2,6 @@
 swat-s1 plc4.py
 """
 
-
-#from utils import PLC1_DATA, STATE, PLC1_PROTOCOL
-#from utils import PLC_PERIOD_SEC, PLC_SAMPLES
-#from utils import IP, LIT_101_M, LIT_301_M, FIT_201_THRESH,LS_201_M,LS_202_M,LS_203_M
-
 import time
 import logging
 import cpppo
@@ -24,27 +19,26 @@ PLC6_ADDR = '192.168.1.60:44818'
 PLC4_TAGS = (
     ('P401', 4, 'INT'),
     ('P403', 4, 'INT'),
-    ('FIT401', 4, 'REAL'),
     ('LIT401', 4, 'REAL'),
     ('LS401', 4 , 'REAL'),
     ('LS601', 4 , 'REAL')
 )
 
-LIT_401_M = {  # ultrafiltration tank m
+LIT_401_M = {  # ROF tank m
     'LL': 0.250,
     'L': 0.40,
     'H': 1.000,
     'HH': 1.200,
 }
 
-LS_401_M = {  # ultrafiltration tank m
+LS_401_M = {  # NaHSO3 tank m
     'LL': 0.250,
     'L': 0.400,
     'H': 1.000,
     'HH': 1.200,
 }
 
-LS_601_M = {  # ultrafiltration tank m
+LS_601_M = {  # ROP tank m
     'LL': 0.250,
     'L': 0.400,
     'H': 1.000,
@@ -53,7 +47,6 @@ LS_601_M = {  # ultrafiltration tank m
 
 LIT401_4 = ('LIT401', 4)
 LS401_4 = ('LS401', 4)
-#LS601_4 = ('LS601', 4)
 
 P401 = ('P401', 4)
 P403 = ('P403', 4)
@@ -69,13 +62,13 @@ PP_PERIOD_SEC = 0.40  # physical process update rate in seconds
 PP_PERIOD_HOURS = (PP_PERIOD_SEC / 3600.0) * PP_RESCALING_HOURS
 PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 
-# TODO: real value tag where to read/write flow sensor
 class SwatPLC4():
     def __init__(self):
 
         try:
+            log = open("logs/plc3log.log","w")
+            log.close()
             self.server = self.start_server()
-            #self.server.wait()
             time.sleep(10)
             self.pre_loop()
             print('pre_loop end')
@@ -113,7 +106,6 @@ class SwatPLC4():
                  TAGS+=str(tag[-1])
                  TAGS+= ' '
            cmd = shlex.split( CMD+ PRINT_Stdout + ADDRESS +TAGS)
-           # cmd = EnipProtocol._start_server_cmd(address, tags)
            server = subprocess.Popen(cmd, shell=False)
            return server
 
@@ -177,13 +169,11 @@ class SwatPLC4():
 
         cmd = shlex.split(
             'python3 -m cpppo.server.enip.client ' +
-            #'--log ' + self._client_log +
             '--address ' + address +
             ' ' + tag_string
         )
         # print 'DEBUG enip _send cmd shlex list: ', cmd
 
-        # TODO: pipe stdout and return the sent value
         try:
             client = subprocess.Popen(cmd, shell=False)
             client.wait()
@@ -214,7 +204,6 @@ class SwatPLC4():
 
         cmd = shlex.split(
             'python3 -m cpppo.server.enip.client ' + '--print ' +
-           # '--log ' + self._client_log +
             '--address ' + address +
             ' ' + tag_string
         )
@@ -242,7 +231,7 @@ class SwatPLC4():
 
     def pre_loop(self, sleep=0.2):
        # print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        #logging.basicConfig(filename='logs/plc1log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='logs/plc4log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):
@@ -259,45 +248,43 @@ class SwatPLC4():
             #logging.debug('plc 4 count : %d', count)
             lit401 = float(self.get(LIT401_4))
             self.send(LIT401_4, lit401, PLC4_ADDR)
-            #logging.debug("PLC4 - get lit401: %f",lit401)
+            logging.debug("PLC4 - get lit401: %f",lit401)
 
             ls401 = float(self.get(LS401_4))
             self.send(LS401_4, ls401, PLC4_ADDR)
-            #logging.debug("PLC4 - get ls401: %f",ls401)
+            logging.debug("PLC4 - get ls401: %f",ls401)
 
             ls601 = float(self.receive(LS601_6, PLC6_ADDR))
-            #self.send(LS601_4, ls601, PLC4_ADDR)
-            #logging.debug("PLC4 - receive ls601: %f", ls601)
-
+            logging.debug("PLC4 - receive ls601: %f", ls601)
+        
             if  lit401 <= LIT_401_M['L'] or ls401 <= LS_401_M['L'] or ls601 >= LS_601_M['H']:
                  # CLOSE MV201
                  self.set(P401, 0)
                  self.send(P401, 0, PLC4_ADDR)
                  self.set(P403, 0)
                  self.send(P403, 0, PLC4_ADDR)
-                 #logging.info("PLC4 - LIT401 under LIT401_L or LIT401 under LIT401_L  -> close p401 and p403")
+                 logging.info( "PLC4 - LIT401 under LIT401_M['L'] "\
+                    "or LS401 under LS401_M['L'] "\
+                    "or ls601 over LS_601_M['H']-> close p401 and p403" )
+          
             else:
                  # OPEN MV201
                  self.set(P401, 1)
                  self.send(P401, 1, PLC4_ADDR)
                  self.set(P403, 1)
                  self.send(P403, 1, PLC4_ADDR)
-                 #logging.info("PLC4 - lit401 over LIT_401_M['L'] and LS401 over LS401_L  -> open p401 and p403")
+                 logging.info("PLC4 - lit401 over LIT_401_M['L'] "\
+                    "and LS401 over LS401_M['L'] and " \
+                    "ls601 under LS_601_M['H'] -> open p401 and p403")
 
             
 
             time.sleep(PLC_PERIOD_SEC)
             count += 1
 
-        #logging.debug('Swat PLC4 shutdown')
+        logging.debug('Swat PLC4 shutdown')
 
 
 if __name__ == "__main__":
 
-    # notice that memory init is different form disk init
     plc4 = SwatPLC4()
-        #name='plc1',
-        #state=STATE,
-        #protocol=PLC1_PROTOCOL,
-        #memory=PLC1_DATA,
-        #disk=PLC1_DATA)

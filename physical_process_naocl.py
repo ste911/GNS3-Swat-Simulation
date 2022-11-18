@@ -1,15 +1,9 @@
-#from utils import  NaOCl_PUMP_FLOWRATE_OUT
-#from utils import NaOCl_TANK_HEIGHT, NaOCl_TANK_SECTION, NaOCl_TANK_DIAMETER
-#from utils import  NAOCLT_INIT_LEVEL
-#from utils import STATE, PP_PERIOD_SEC, PP_PERIOD_HOURS, PP_SAMPLES
-
 import sys
 import time
 import threading
 import logging
 import sqlite3
 
-# SPHINX_SWAT_TUTORIAL TAGS(
 
 MV201 = ('MV201', 2)
 P205 = ('P205', 2)
@@ -36,17 +30,14 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class NaOClTank():
    
     def __init__(
-            self, name,
-            section, level):
+            self, section, level):
         """
-        :param str name: device name
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
 
         self.section = section
         self.level = level
-        self.name = name
 
         self.pre_loop()
         self.main_loop()
@@ -74,16 +65,10 @@ class NaOClTank():
             except sqlite3.Error as e:
                 print('_get ERROR: %s: ' % e.args[0])
 
-    #def _start(self):
-     #   self.pre_loop()
-     #   self.main_loop()
-
     def pre_loop(self):
 
-        # SPHINX_SWAT_TUTORIAL STATE INIT(
         self.set(P205, 0)
         self.level = self.set(LS203, 1)
-        # SPHINX_SWAT_TUTORIAL STATE INIT)
 
     def main_loop(self):
 

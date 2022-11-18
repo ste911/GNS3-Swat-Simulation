@@ -1,8 +1,3 @@
-#from utils import  HCl_PUMP_FLOWRATE_OUT
-#from utils import  HCl_TANK_HEIGHT, HCl_TANK_SECTION, HCl_TANK_DIAMETER
-#from utils import  HCLT_INIT_LEVEL
-#from utils import STATE, PP_PERIOD_SEC, PP_PERIOD_HOURS, PP_SAMPLES
-
 import sys
 import time
 import threading
@@ -39,9 +34,9 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class HClTank():
 
     def __init__(
-             self,name,section,level):
+             self,section,level):
         """
-        :param str name: device name
+
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
@@ -50,20 +45,6 @@ class HClTank():
         self.level = level
         self.pre_loop()
         self.main_loop()
-
-   # def _start(self):
-
-     # with sqlite3.connect("swat_s1_db.sqlite") as conn:
-      #      try:
-       #         cursor = conn.cursor()
-        #        cursor.execute("SELECT value FROM swat_s1 where name = 'MV101'", )
-         #       record = cursor.fetchone()
-          #      print(record)
-           # except sqlite3.Error:
-            #    print('_get ERROR: %s: ' % e.args[0])
-
-      #  self.pre_loop()
-      #  self.main_loop()
 
     def get(self, what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'

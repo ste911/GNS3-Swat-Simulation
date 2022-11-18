@@ -1,16 +1,9 @@
-#from utils import  NaHSO3_PUMP_FLOWRATE_OUT
-#from utils import NaHSO3_TANK_HEIGHT, NaHSO3_TANK_SECTION, NaHSO3_TANK_DIAMETER
-#from utils import  NAHSO3T_INIT_LEVEL
-#from utils import STATE, PP_PERIOD_SEC, PP_PERIOD_HOURS, PP_SAMPLES
-
-
 import sys
 import time
 import threading
 import logging
 import sqlite3
 
-# SPHINX_SWAT_TUTORIAL TAGS(
 MV501 = ('MV501', 5)
 
 P401 = ('P401', 4)
@@ -40,22 +33,17 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class NaHSO3Tank():
 
     def __init__(
-            self, name,
-            section, level):
+            self, section, level):
         """
-        :param str name: device name
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
 
         self.section = section
         self.level = level
-        self.name = name
         self.pre_loop()
         self.main_loop()
-    #def _start(self):
-     #   self.pre_loop()
-      #  self.main_loop()
+        
     def get(self, what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'
         with sqlite3.connect("swat_s1_db.sqlite") as conn:
@@ -81,10 +69,7 @@ class NaHSO3Tank():
 
     def pre_loop(self):
 
-        # SPHINX_SWAT_TUTORIAL STATE INIT(
         self.level = self.set(LS401, 0.800)
-        
-        # SPHINX_SWAT_TUTORIAL STATE INIT)
 
     def main_loop(self):
 

@@ -4,8 +4,6 @@ import threading
 import logging
 import sqlite3
 
-# SPHINX_SWAT_TUTORIAL TAGS(
-
 MV501 = ('MV501', 5)
 P401 = ('P401', 4)
 P501 = ('P501', 5)
@@ -49,9 +47,6 @@ class ROPWaterTank():
         self.pre_loop()
         self.main_loop()
 
-   # def _start(self):
-    #    self.pre_loop()
-    #    self.main_loop()
     def get(self, what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'
         with sqlite3.connect("swat_s1_db.sqlite") as conn:
@@ -77,12 +72,8 @@ class ROPWaterTank():
 
     def pre_loop(self):
 
-        # SPHINX_SWAT_TUTORIAL STATE INIT(
         self.level=self.set(LS601,0.5)
-        # SPHINX_SWAT_TUTORIAL STATE INIT)
-
-        # test underflow
-
+        
     def main_loop(self):
 
         count = 0

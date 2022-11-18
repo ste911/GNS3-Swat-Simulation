@@ -1,8 +1,3 @@
-#from utils import  NaCl_PUMP_FLOWRATE_OUT
-#from utils import NaCl_TANK_HEIGHT, NaCl_TANK_SECTION, NaCl_TANK_DIAMETER
-#from utils import  NACLT_INIT_LEVEL
-#from utils import STATE, PP_PERIOD_SEC, PP_PERIOD_HOURS, PP_SAMPLES
-
 import sys
 import time
 import threading
@@ -34,22 +29,16 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class NaClTank():
     
     def __init__(
-            self, name,
-            section, level):
+            self, section, level):
         """
-        :param str name: device name
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
 
         self.section = section
         self.level = level
-        self.name = name
         self.pre_loop()
         self.main_loop()
- #   def _start(self):
-  #      self.pre_loop()
-   #     self.main_loop()
 
     def get(self, what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'
@@ -76,10 +65,8 @@ class NaClTank():
 
     def pre_loop(self):
 
-        # SPHINX_SWAT_TUTORIAL STATE INIT(
         self.set(P201, 0)
         self.level = self.set(LS201, 1)
-        # SPHINX_SWAT_TUTORIAL STATE INIT)
 
     def main_loop(self):
         count = 0
