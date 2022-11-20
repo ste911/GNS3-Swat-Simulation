@@ -108,7 +108,7 @@ class UFFWaterTank():
                 new_level = 0.0
 
             # update internal and state water level
-            #logging.debug('UFFTank new level %f with delta %f', new_level, new_level -self.level)    
+            logging.debug('UFFTank new level %f with delta %f', new_level, new_level -self.level)    
             self.level = self.set(LIT301, new_level)
 
             count += 1
@@ -117,11 +117,12 @@ class UFFWaterTank():
 
 if __name__ == '__main__':
 
-   # logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
+    f=open("uff.log","w")
+    f.close()
 
+    logging.basicConfig(filename='uff.log', level=logging.DEBUG)
 
     ufft  = UFFWaterTank(
-        name='ufft',
         section=UFF_TANK_SECTION,
         level=UFFT_INIT_LEVEL
     )

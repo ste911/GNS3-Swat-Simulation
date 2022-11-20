@@ -89,7 +89,7 @@ class NaClTank():
                 new_level = 0.0
 
             # update internal and state water level
-           # logging.debug('NaClTank new level %f with delta %f', new_level, new_level -self.level)
+            logging.debug('NaClTank new level %f with delta %f', new_level, new_level -self.level)
             self.level = self.set(LS201, new_level)
 
             count += 1
@@ -97,12 +97,12 @@ class NaClTank():
 
 
 if __name__ == '__main__':
-
-   # logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
-
+    
+    f= open("nacl.log","w")
+    f.close()
+    logging.basicConfig(filename='nacl.log', level=logging.DEBUG)
 
     naclt = NaClTank(
-        name='naclt',
         section=NaCl_TANK_SECTION,
         level=NACLT_INIT_LEVEL
     )

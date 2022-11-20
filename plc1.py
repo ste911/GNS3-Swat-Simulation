@@ -86,7 +86,7 @@ class SwatPLC1():
     def __init__(self):
 
         try:
-            log = open("filename='logs/plc1log.log'", "w")
+            log = open("filename='plc1log.log'", "w")
             log.write(" ")
             log.close()
             self.server = self.start_server()
@@ -160,7 +160,6 @@ class SwatPLC1():
       resp = server.recv(1024)
       server.close()
       return resp
-
 
     def send(self, what, value, address):
         """Send (write) a value to another host.
@@ -250,7 +249,7 @@ class SwatPLC1():
 
     def pre_loop(self, sleep=0.2):
         #print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        logging.basicConfig(filename='logs/plc1log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='plc1log.log', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):

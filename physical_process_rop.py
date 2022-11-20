@@ -33,10 +33,9 @@ PP_SAMPLES = int(PLC_PERIOD_SEC / PP_PERIOD_SEC) * PLC_SAMPLES
 class ROPWaterTank():
 
     def __init__(
-            self, name,
+            self,
             section, level):
         """
-        :param str name: device name
         :param float section: cross section of the tank in m^2
         :param float level: current level in m
         """
@@ -105,7 +104,7 @@ class ROPWaterTank():
                 new_level = 0.0
 
             # update internal and state water level
-            #logging.debug('ROPTank new level %f with delta %f', new_level, new_level -self.level)
+            logging.debug('ROPTank new level %f with delta %f', new_level, new_level -self.level)
             self.level = self.set(LS601, new_level)
 
             count += 1
@@ -113,11 +112,12 @@ class ROPWaterTank():
 
 if __name__ == '__main__':
 
-   # logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
-
+   
+    f=open("rop.log","w")
+    f.close()   
+    logging.basicConfig(filename='rop.log', level=logging.DEBUG)
 
     ropt  = ROPWaterTank(
-        name='ropt',
         section=ROP_TANK_SECTION,
         level=ROPT_INIT_LEVEL
     )

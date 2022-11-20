@@ -106,7 +106,7 @@ class RawWaterTank():
                 new_level = 0.0
 
             # update internal and state water level
-           # logging.debug('RawWaterTank new level %f with delta %f', new_level, new_level -self.level)   
+            logging.debug('RawWaterTank new level %f with delta %f', new_level, new_level -self.level)   
             
             self.level = self.set(LIT101, new_level)
 
@@ -117,11 +117,11 @@ class RawWaterTank():
 
 if __name__ == '__main__':
 
-   # logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
+    f=open("rwt.log","w")
+    f.close()
 
-
+    logging.basicConfig(filename='rwt.log', level=logging.DEBUG)
     rwt  = RawWaterTank(
-        name='rwt',
         section=TANK_SECTION,
         level=RWT_INIT_LEVEL
     )

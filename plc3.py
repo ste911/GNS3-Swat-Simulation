@@ -19,6 +19,7 @@ PLC3_ADDR = '192.168.1.30:44818'
 PLC4_ADDR = '192.168.1.40:44818'
 
 PLC3_TAGS = (
+    ('LIT301', 3, 'REAL'),
     ('P301', 3, 'INT'),
     ('MV302', 3, 'INT'),
 
@@ -42,6 +43,7 @@ LIT_401_M = {  # ultrafiltration tank m
 
 LIT301_3 = ('LIT301', 3)
 
+
 #LIT401_3 = ('LIT401', 3)
 P301 = ('P301', 3)
 MV302 = ('MV302', 3)
@@ -62,7 +64,7 @@ class SwatPLC3():
     def __init__(self):
 
         try:
-            log = open("logs/plc3log.log","w")
+            log = open("plc3log.log","w")
             log.close()
             self.server = self.start_server()
             #self.server.wait()
@@ -230,7 +232,7 @@ class SwatPLC3():
 
     def pre_loop(self, sleep=0.2):
        # print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        logging.basicConfig(filename='logs/plc3log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='plc3log.log', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):

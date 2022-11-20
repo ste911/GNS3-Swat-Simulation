@@ -90,7 +90,7 @@ class SwatPLC2():
     def __init__(self):
 
         try:
-            log = open("logs/plc2log.log","w")
+            log = open("plc2log.log","w")
             log.close()
             self.server = self.start_server()
             time.sleep(10)
@@ -253,7 +253,7 @@ class SwatPLC2():
 
     def pre_loop(self, sleep=0.2):
         #print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        logging.basicConfig(filename='logs/plc2log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='plc2log.log', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):

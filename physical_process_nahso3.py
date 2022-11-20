@@ -96,7 +96,7 @@ class NaHSO3Tank():
                 new_level = 0.0
 
             # update internal and state water level
-            #logging.debug('NaHSO3Tank new level %f with delta %f', new_level, new_level -self.level)
+            logging.debug('NaHSO3Tank new level %f with delta %f', new_level, new_level -self.level)
             self.level = self.set(LS401, new_level)
 
             if int(p401) ^ int(p403):
@@ -109,11 +109,11 @@ class NaHSO3Tank():
 
 if __name__ == '__main__':
 
-   # logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
-
+    f=open("nahso3.log","w")
+    f.close()
+    logging.basicConfig(filename='nahso3.log', level=logging.DEBUG)
 
     nahso3t = NaHSO3Tank(
-        name='nahso3t',
         section=NaHSO3_TANK_SECTION,
         level=NAHSO3T_INIT_LEVEL
     )

@@ -28,15 +28,15 @@ class Server ():
 
         while 1:
             conn,addr = s.accept()
-            print ( 'Request received by ' + addr[0]+ ':' + str(addr[1]))
+            #print ( 'Request received by ' + addr[0]+ ':' + str(addr[1]))
             req= conn.recv(512)
             #print(req)
             strreq=req.decode().split(':')
             if strreq[0] == 'GET':
                 what = (strreq[1],int(strreq[2]))
-                #  print(what)
-                res=get(what)
-                # print(res)
+                #print(strreq)
+                res=self.get(what)
+                #print(res)
                 conn.send(str(res).encode())
             elif strreq[0]=='SET':
                 what = (strreq[1],int(strreq[2]))
@@ -45,12 +45,12 @@ class Server ():
                      value = int(strreq[3])
                 else:    
                      value = float(strreq[3])
-                     set(what,value)
+                self.set(what,value)
             else:
                 print('Errore, ',strreq[0])
                 exit()
 
-def get(self,what):
+    def get(self,what):
         get_query = 'SELECT value FROM swat_s1 WHERE name = ? AND pid = ?'
         with sqlite3.connect("swat_s1_db.sqlite") as conn:
             try:
@@ -61,7 +61,7 @@ def get(self,what):
             except sqlite3.Error as e:
                 print('_get ERROR: %s: ' % e.args[0])
 
-def set(self, what, value):
+    def set(self, what, value):
         set_query = 'UPDATE  swat_s1 SET value = ? WHERE name = ? AND pid = ?'
         what = tuple([value,what[0],what[1]])
         with sqlite3.connect("swat_s1_db.sqlite") as conn:
@@ -73,6 +73,6 @@ def set(self, what, value):
             except sqlite3.Error as e:
                 print('_get ERROR: %s: ' % e.args[0])
 
+if __name__ == "__main__":
 
-
-
+    server= Server()

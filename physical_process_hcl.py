@@ -105,10 +105,12 @@ class HClTank():
 
 if __name__ == '__main__':
 
-#    logging.basicConfig(filename='logs/physicalProc.log', encoding ='utf-8', level=logging.DEBUG)
+
+    f = open("hcl.log", "w")
+    f.close()
+    logging.basicConfig(filename='hcl.log', level=logging.DEBUG)
     
     hclt = HClTank(
-        name='hclt',
         section=HCl_TANK_SECTION,
         level=HCLT_INIT_LEVEL
     )

@@ -43,7 +43,7 @@ class SwatPLC6():
     def __init__(self):
 
         try:
-            log = open("logs/plc6log.log","w")
+            log = open("plc6log.log","w")
             log.close()
             self.server = self.start_server()
             time.sleep(20)
@@ -206,7 +206,7 @@ class SwatPLC6():
 
     def pre_loop(self, sleep=0.2):
        # print 'DEBUG: swat-s1 plc1 enters pre_loop'
-        logging.basicConfig(filename='logs/plc6log.log', encoding ='utf-8', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
+        logging.basicConfig(filename='plc6log.log', level=logging.DEBUG, filemode = 'w', format='%(asctime)s %(levelname)-8s %(message)s')
         time.sleep(sleep)
 
     def main_loop(self):
