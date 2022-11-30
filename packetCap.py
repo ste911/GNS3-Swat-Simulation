@@ -181,15 +181,16 @@ if __name__ == '__main__':
         sp.join()
     else:
         pc = threading.Thread(target=packetCap, name = "packetCap")
-        cn = threading.Thread(target=changeName, name = "changeName")
+       # cn = threading.Thread(target=changeName, name = "changeName")
         pm = threading.Thread(target= packetMod, name = "packetMod")
 
         
         pc.start()
-        cn.start()  
+        #cn.start()  
         time.sleep(3)
         pm.start()
 
+        changeName()
         pm.join()
         pc.join()
-        cn.join()
+        #cn.join()

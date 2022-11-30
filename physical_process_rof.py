@@ -44,7 +44,6 @@ class ROFWaterTank():
 
         self.section = section
         self.level = level
-        self.name = name
         self.pre_loop()
         self.main_loop()
 
