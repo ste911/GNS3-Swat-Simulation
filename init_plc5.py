@@ -9,7 +9,7 @@ try:
    
    cmd = shlex.split(
           "python3 /root/plc5.py")
-   plc5= subprocess.Popen(cmd,shell=True)
+   plc5= subprocess.Popen(cmd,shell=False)
    
    plc5.wait()
    ftp.wait()

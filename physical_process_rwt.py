@@ -72,7 +72,7 @@ class RawWaterTank():
 
     def pre_loop(self):
 
-        self.set(MV101, 1)
+        self.set(MV101, 0)
         self.set(P101, 1)
         self.level = self.set(LIT101, 0.300)
 

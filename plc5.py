@@ -208,7 +208,7 @@ class SwatPLC5():
           for field in what[1:]:
             tag_string += ':'
             tag_string += str(field)
-        print(what,address)
+        #print(what,address)
         cmd = shlex.split(
             'python3 -m cpppo.server.enip.client ' + '--print ' +
             '--address ' + address +

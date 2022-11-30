@@ -67,7 +67,6 @@ class SwatPLC3():
             log = open("plc3log.log","w")
             log.close()
             self.server = self.start_server()
-            #self.server.wait()
             time.sleep(10)
             self.pre_loop()
             print('pre_loop end')

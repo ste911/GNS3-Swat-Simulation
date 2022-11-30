@@ -219,9 +219,7 @@ class SwatPLC4():
 
             # value is stored as first tuple element
             # between a pair of square brackets
-            print(raw_out)
             raw_string = raw_out[0]
-            print(type(raw_string))
             out = raw_string[(raw_string.find(b'[') + 1):raw_string.find(b']')]
             
             return out
