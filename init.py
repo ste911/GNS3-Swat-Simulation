@@ -58,8 +58,6 @@ if __name__ == "__main__":
              print( "{} successfully created.".format(PATH))
     except sqlite3.OperationalError:
              print ("{} already exists.".format(PATH))
-             conn.executescript(SCHEMA_INIT)
-             print( "{} successfully reinitialized.".format(PATH))
 
 
 ######   Start the physical Processes   ######
